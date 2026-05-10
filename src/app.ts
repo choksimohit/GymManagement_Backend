@@ -15,8 +15,19 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean).map(o => (o as string).replace(/\/$/, ''));
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
