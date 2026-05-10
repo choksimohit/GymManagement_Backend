@@ -19,7 +19,7 @@ const progressSchema = z.object({
 });
 
 router.get('/member/:memberId', async (req: AuthRequest, res: Response) => {
-  const memberId = parseInt(req.params.memberId);
+  const memberId = parseInt(req.params.memberId as string);
   if (req.user?.role === 'member' && req.user.memberId !== memberId) {
     res.status(403).json({ message: 'Forbidden' }); return;
   }
@@ -43,14 +43,14 @@ router.put('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
   const parsed = progressSchema.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ message: 'Invalid input', errors: parsed.error.errors }); return; }
   const record = await prisma.bodyProgress.update({
-    where: { id: parseInt(req.params.id) },
+    where: { id: parseInt(req.params.id as string) },
     data: { ...parsed.data, progressDate: new Date(parsed.data.progressDate) },
   });
   res.json(record);
 });
 
 router.delete('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
-  await prisma.bodyProgress.delete({ where: { id: parseInt(req.params.id) } });
+  await prisma.bodyProgress.delete({ where: { id: parseInt(req.params.id as string) } });
   res.json({ message: 'Record deleted' });
 });
 

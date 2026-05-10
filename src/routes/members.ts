@@ -69,7 +69,7 @@ router.get('/', requireAdmin, async (_req: AuthRequest, res: Response) => {
 });
 
 router.get('/:id', async (req: AuthRequest, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (req.user?.role === 'member' && req.user.memberId !== id) {
     res.status(403).json({ message: 'Forbidden' });
     return;
@@ -135,7 +135,7 @@ router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
 });
 
 router.put('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const parsed = memberSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ message: 'Invalid input', errors: parsed.error.errors });
@@ -182,7 +182,7 @@ router.put('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
 });
 
 router.delete('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   await prisma.gymMember.update({
     where: { id },
     data: { membershipStatus: 3 },

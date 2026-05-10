@@ -43,7 +43,7 @@ router.get('/', requireAdmin, async (_req: AuthRequest, res: Response) => {
 });
 
 router.get('/member/:memberId', async (req: AuthRequest, res: Response) => {
-  const memberId = parseInt(req.params.memberId);
+  const memberId = parseInt(req.params.memberId as string);
   if (req.user?.role === 'member' && req.user.memberId !== memberId) {
     res.status(403).json({ message: 'Forbidden' }); return;
   }
@@ -87,7 +87,7 @@ router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
 });
 
 router.put('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const parsed = membershipSchema.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ message: 'Invalid input', errors: parsed.error.errors }); return; }
 
@@ -106,12 +106,12 @@ router.put('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
 });
 
 router.delete('/:id', requireAdmin, async (req: AuthRequest, res: Response) => {
-  await prisma.memberMembership.delete({ where: { id: parseInt(req.params.id) } });
+  await prisma.memberMembership.delete({ where: { id: parseInt(req.params.id as string) } });
   res.json({ message: 'Membership deleted' });
 });
 
 router.post('/:id/payments', requireAdmin, async (req: AuthRequest, res: Response) => {
-  const membershipId = parseInt(req.params.id);
+  const membershipId = parseInt(req.params.id as string);
   const parsed = paymentSchema.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ message: 'Invalid input', errors: parsed.error.errors }); return; }
 
@@ -141,7 +141,7 @@ router.post('/:id/payments', requireAdmin, async (req: AuthRequest, res: Respons
 
 router.get('/:id/payments', authenticate, async (req: AuthRequest, res: Response) => {
   const payments = await prisma.membershipPayment.findMany({
-    where: { membershipId: parseInt(req.params.id) },
+    where: { membershipId: parseInt(req.params.id as string) },
     orderBy: { paymentDate: 'desc' },
   });
   res.json(payments);
