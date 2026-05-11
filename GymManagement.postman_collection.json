@@ -1,0 +1,450 @@
+{
+  "info": {
+    "name": "Gym Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:4000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) pm.collectionVariables.set('token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Admin User\",\n  \"email\": \"admin@gym.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) pm.collectionVariables.set('token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@gym.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "List Members",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/members"
+          }
+        },
+        {
+          "name": "Get Member by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/members/1"
+          }
+        },
+        {
+          "name": "Create Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/members",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"gender\": \"Male\",\n  \"dateOfBirth\": \"1995-06-15\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"9876543210\",\n  \"address\": \"123 Main St\",\n  \"membershipType\": 1,\n  \"membershipStatus\": 1,\n  \"emergencyContacts\": [\n    {\n      \"name\": \"Jane Doe\",\n      \"relationship\": \"Spouse\",\n      \"phone\": \"9876543211\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/members/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"gender\": \"Male\",\n  \"dateOfBirth\": \"1995-06-15\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"9876543210\",\n  \"address\": \"456 New St\",\n  \"membershipType\": 1,\n  \"membershipStatus\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete (Resign) Member",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/members/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plans",
+      "item": [
+        {
+          "name": "List Plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/plans"
+          }
+        },
+        {
+          "name": "Get Plan by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/plans/1"
+          }
+        },
+        {
+          "name": "Create Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/plans",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Monthly Basic\",\n  \"durationValue\": 1,\n  \"durationUnit\": 3,\n  \"price\": 999.00,\n  \"description\": \"Basic monthly membership\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Plan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/plans/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Monthly Basic Updated\",\n  \"durationValue\": 1,\n  \"durationUnit\": 3,\n  \"price\": 1099.00,\n  \"description\": \"Updated basic monthly membership\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/plans/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memberships",
+      "item": [
+        {
+          "name": "List All Memberships",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/memberships"
+          }
+        },
+        {
+          "name": "Get Memberships by Member",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/memberships/member/1"
+          }
+        },
+        {
+          "name": "Calculate End Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/memberships/calculate-end-date",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startDate\": \"2026-05-11\",\n  \"planId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Membership",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/memberships",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1,\n  \"planId\": 1,\n  \"startDate\": \"2026-05-11\",\n  \"totalAmount\": 999.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Membership",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/memberships/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1,\n  \"planId\": 1,\n  \"startDate\": \"2026-05-11\",\n  \"totalAmount\": 1099.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Membership",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/memberships/1"
+          }
+        },
+        {
+          "name": "Add Payment to Membership",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/memberships/1/payments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500.00,\n  \"paymentDate\": \"2026-05-11\",\n  \"paymentMode\": 1,\n  \"referenceNo\": \"TXN123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Payments for Membership",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/memberships/1/payments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Get Attendance (by date)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/attendance?date=2026-05-11",
+              "query": [{ "key": "date", "value": "2026-05-11" }]
+            }
+          }
+        },
+        {
+          "name": "Check In",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/attendance/check-in",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Check Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/attendance/check-out",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "QR Check In/Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/attendance/qr",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qrCode\": \"<base64-encoded-qr-string>\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Body Progress",
+      "item": [
+        {
+          "name": "Get Progress by Member",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/body-progress/member/1"
+          }
+        },
+        {
+          "name": "Add Progress Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/body-progress",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1,\n  \"progressDate\": \"2026-05-11\",\n  \"weight\": 72.5,\n  \"bmi\": 22.4,\n  \"fat\": 18.0,\n  \"muscle\": 45.0,\n  \"notes\": \"Feeling good\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Progress Record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/body-progress/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": 1,\n  \"progressDate\": \"2026-05-11\",\n  \"weight\": 71.0,\n  \"bmi\": 22.0,\n  \"fat\": 17.5,\n  \"muscle\": 46.0,\n  \"notes\": \"Improved\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Progress Record",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/body-progress/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/dashboard"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Memberships Report",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reports/memberships"
+          }
+        },
+        {
+          "name": "Memberships Report (CSV download)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reports/memberships/csv"
+          }
+        },
+        {
+          "name": "Revenue Report",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/reports/revenue?year=2026&month=5",
+              "query": [
+                { "key": "year", "value": "2026" },
+                { "key": "month", "value": "5" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
